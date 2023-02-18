@@ -1,0 +1,8 @@
+package com.liang.lom.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.liang.lom.entity.Category;
+
+public interface CategoryService extends IService<Category> {
+    public void remove(Long id);
+}

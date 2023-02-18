@@ -21,3 +21,16 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# [图片图标资源不上传]
+*.png
+*.jpg
+*ico
+
+# [target里面的文件不上传]
+target/*
+
+# [静态资源不上传]
+src/main/resources/backend
+src/main/resources/front
+src/main/resources/upload
