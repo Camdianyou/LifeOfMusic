@@ -25,7 +25,7 @@ hs_err_pid*
 # [图片图标资源不上传]
 *.png
 *.jpg
-*ico
+*.ico
 
 # [target里面的文件不上传]
 target/*
