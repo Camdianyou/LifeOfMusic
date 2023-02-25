@@ -9,7 +9,7 @@ public class BaseContext {
      * @param id
      */
     public static void setCurrentId(Long id){
-        threadLocal.set(id);
+            threadLocal.set(id);
     }
 
     /**

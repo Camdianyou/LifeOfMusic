@@ -47,12 +47,10 @@ public class EmployeeController {
         if (emp == null) {
             return R.error("登陆失败,用户不存在");
         }
-
         // 进行密码的对比,不一致的时候返回登陆失败的消息
         if (!emp.getPassword().equals(password)) {
             return R.error("登陆失败,密码错误");
         }
-
         // 查看员工状态，如果已经被禁用则登陆失败
         if (emp.getStatus() == 0) {
             return R.error("登陆失败,该用户已经被禁用");

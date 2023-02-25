@@ -10,7 +10,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -67,16 +66,13 @@ public class CommonController {
             FileInputStream fileInputStream = new FileInputStream(basePath + name);
             // 输出流，通过输出流将文件写回浏览器，在浏览器中展示图片
             ServletOutputStream outputStream = response.getOutputStream();
-
             response.setContentType("image/jpeg");
-
             int len = 0;
             byte[] bytes = new byte[1024];
             while ((len = fileInputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, len);
                 outputStream.flush();
             }
-
             // 关闭资源
             outputStream.close();
             fileInputStream.close();

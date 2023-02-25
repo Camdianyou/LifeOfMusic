@@ -10,6 +10,11 @@ spring:
       url: jdbc:mysql://localhost:3306/lombase?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: 123456
+  # 邮箱配置
+  mail:
+    host: smtp.qq.com
+    username: 2230037280@qq.com
+    password: zcvdrrkralohecae
 mybatis-plus:
   configuration:
     # address_book --> AddressBook
@@ -24,3 +29,4 @@ mybatis-plus:
 
 lifeofmusic:
   path: D:\assetOfCode\LifeOfMusic\lom_take_out\src\main\resources\upload\
+

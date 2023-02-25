@@ -100,6 +100,7 @@ public class DishController {
 
     /**
      * 停售 --- 批量停售菜品
+     *
      * @param status
      * @param id
      * @return
@@ -122,11 +123,12 @@ public class DishController {
 
     /**
      * 删除 --- 批量删除数据
+     *
      * @param ids
      * @return
      */
     @DeleteMapping
-    public R<String> deleteSales(String ids){
+    public R<String> deleteSales(String ids) {
         List<Dish> dishList = new ArrayList();
         String[] idList = ids.split("\\,+");
         dishList = Arrays.stream(idList).map(item -> {
@@ -138,5 +140,20 @@ public class DishController {
 
         dishService.updateBatchById(dishList);
         return R.success("菜品已经删除");
+    }
+
+    @GetMapping("list")
+    public R<List<Dish>> getDistList(Dish dish) {
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        // 查询没有被删除的
+        queryWrapper.eq(Dish::getIsDeleted, 0);
+        // 查询没有停售的
+        queryWrapper.eq(Dish::getStatus, 1);
+        // 查询菜品分类下面的所有的菜品
+        queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+        // 添加排序条件
+        queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+        List<Dish> list = dishService.list(queryWrapper);
+        return R.success(list);
     }
 }

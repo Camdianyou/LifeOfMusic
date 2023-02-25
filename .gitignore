@@ -34,3 +34,4 @@ target/*
 src/main/resources/backend
 src/main/resources/front
 src/main/resources/upload
+src/main/resources/templates
