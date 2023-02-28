@@ -14,7 +14,7 @@ spring:
   mail:
     host: smtp.qq.com
     username: 2230037280@qq.com
-    password: zcvdrrkralohecae
+    password: rdmciukmifkidibh
 mybatis-plus:
   configuration:
     # address_book --> AddressBook

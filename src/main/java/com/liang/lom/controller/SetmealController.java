@@ -3,11 +3,14 @@ package com.liang.lom.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.liang.lom.common.R;
+import com.liang.lom.dto.DishDto;
 import com.liang.lom.dto.SetmealDto;
 import com.liang.lom.entity.Category;
 import com.liang.lom.entity.Dish;
 import com.liang.lom.entity.Setmeal;
+import com.liang.lom.entity.SetmealDish;
 import com.liang.lom.service.CategoryService;
+import com.liang.lom.service.DishService;
 import com.liang.lom.service.SetmealDishService;
 import com.liang.lom.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +38,9 @@ public class SetmealController {
 
     @Autowired
     private SetmealDishService setmealDishService;
+
+    @Autowired
+    private DishService dishService;
 
     /**
      * 新增套餐
@@ -110,5 +116,34 @@ public class SetmealController {
         setmealService.updateBatchById(setmealArrayList);
 
         return R.success("状态更新成功");
+    }
+
+    @GetMapping("/list")
+    public R<List<Setmeal>> listSetmeal(Long categoryId, int status) {
+        LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Setmeal::getStatus, status);
+        queryWrapper.eq(categoryId != null, Setmeal::getCategoryId, categoryId);
+        queryWrapper.eq(Setmeal::getIsDeleted, 0);
+
+        List<Setmeal> list = setmealService.list(queryWrapper);
+        return R.success(list);
+    }
+
+    @GetMapping("/dish/{setmealId}")
+    public R<List<DishDto>> queryDishInSetmeal(@PathVariable Long setmealId){
+        LambdaQueryWrapper<SetmealDish> dishLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        dishLambdaQueryWrapper.eq(SetmealDish::getSetmealId,setmealId);
+        List<SetmealDish> list = setmealDishService.list(dishLambdaQueryWrapper);
+
+        List<DishDto> dishDtoList = new ArrayList<>();
+        dishDtoList = list.stream().map(item -> {
+            DishDto dishDto = new DishDto();
+            DishDto dish = dishService.queryById(item.getDishId());
+            BeanUtils.copyProperties(dish,dishDto);
+            dishDto.setCopies(item.getCopies());
+            return dishDto;
+        }).collect(Collectors.toList());
+
+        return R.success(dishDtoList);
     }
 }

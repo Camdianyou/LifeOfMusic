@@ -31,7 +31,4 @@ hs_err_pid*
 target/*
 
 # [静态资源不上传]
-src/main/resources/backend
-src/main/resources/front
 src/main/resources/upload
-src/main/resources/templates

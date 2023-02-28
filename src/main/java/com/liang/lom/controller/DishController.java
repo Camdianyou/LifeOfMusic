@@ -142,7 +142,7 @@ public class DishController {
         return R.success("菜品已经删除");
     }
 
-    @GetMapping("list")
+    /*@GetMapping("list")
     public R<List<Dish>> getDistList(Dish dish) {
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         // 查询没有被删除的
@@ -155,5 +155,44 @@ public class DishController {
         queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
         List<Dish> list = dishService.list(queryWrapper);
         return R.success(list);
+    }*/
+
+    /**
+     * 移动端查询菜品列表
+     * @param dish
+     * @return
+     */
+    @GetMapping("/list")
+    public R<List<DishDto>> getDistList(Dish dish) {
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        // 查询没有被删除的
+        queryWrapper.eq(Dish::getIsDeleted, 0);
+        // 查询没有停售的
+        queryWrapper.eq(Dish::getStatus, 1);
+        // 查询菜品分类下面的所有的菜品
+        queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+        // 添加排序条件
+        queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+        List<DishDto> dishDtoList = new ArrayList<>();
+        List<Dish> list = dishService.list(queryWrapper);
+
+        dishDtoList = list.stream().map(item -> {
+            DishDto dishDto = new DishDto();
+            BeanUtils.copyProperties(item, dishDto);
+            // 获取口味表
+            LambdaQueryWrapper<DishFlavor> dishFlavorLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            dishFlavorLambdaQueryWrapper.eq(DishFlavor::getDishId, item.getId());
+            List<DishFlavor> dishFlavorList = dishFlavorService.list(dishFlavorLambdaQueryWrapper);
+            dishDto.setFlavors(dishFlavorList);
+
+            // 设置菜品名称
+            Category category = categoryService.getById(item.getCategoryId());
+            if (category != null) {
+                dishDto.setCategoryName(category.getName());
+            }
+            return dishDto;
+        }).collect(Collectors.toList());
+
+        return R.success(dishDtoList);
     }
 }

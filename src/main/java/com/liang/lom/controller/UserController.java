@@ -45,11 +45,11 @@ public class UserController {
             // SMSUtils.sendMessage("瑞吉外卖", "SMS_271360137", phone, code);
 
             // 通过邮件发送验证码
-            MailSendUtils.sendMail("lp2230037280@163.com", code);
+            // MailSendUtils.sendMail("lp2230037280@163.com", code);
             // 将验证码存储到Session中
             session.setAttribute(phone, code);
 
-            return R.success("手机验证码短信发送成功");
+            return R.success("手机验证码短信发送成功" + code);
         }
 
         return R.error("短信发送失败");
@@ -66,22 +66,30 @@ public class UserController {
         // 从Session中通过手机号码获取验证码
         String codeInSession = session.getAttribute(phone).toString();
         // 进行验证码的比对
-        if (codeInSession != null && codeInSession.equals(code)){
+        if (codeInSession != null && codeInSession.equals(code)) {
             // 如果比对成功，说明登陆成功
             // 看手机号码是不是已经在我们的数据库表中,如果不在的话我们新增一条数据
             LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(User::getPhone,phone);
+            queryWrapper.eq(User::getPhone, phone);
             User user = userService.getOne(queryWrapper);
             // 新用户
-            if (user == null){
+            if (user == null) {
                 User saveUser = new User();
                 saveUser.setPhone(phone);
                 saveUser.setStatus(1);
                 userService.save(saveUser);
             }
-            session.setAttribute(Constant.USER,user.getId());
+            // 为true则继续执行
+            assert user != null;
+            session.setAttribute(Constant.USER, user.getId());
             return R.success(user);
         }
         return R.error("登录失败");
+    }
+
+    @PostMapping("/loginout")
+    public R<String> loginout(HttpSession session){
+        session.removeAttribute(Constant.USER);
+        return R.success("退出成功");
     }
 }

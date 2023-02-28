@@ -86,7 +86,7 @@ public class CategoryController {
     public R<List<Category>> getTypeList(Category category) {
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
         // 获取对应type的菜品
-        queryWrapper.eq(Category::getType, category.getType());
+        queryWrapper.eq(category.getType() != null, Category::getType, category.getType());
         // 添加排序条件,如果sort相同我们就通过更新时间来排序
         queryWrapper.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
         // 获取没删除的菜品
