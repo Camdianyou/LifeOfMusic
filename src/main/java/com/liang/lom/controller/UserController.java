@@ -50,7 +50,7 @@ public class UserController {
             // SMSUtils.sendMessage("瑞吉外卖", "SMS_271360137", phone, code);
 
             // 通过邮件发送验证码
-            // MailSendUtils.sendMail("lp2230037280@163.com", code);
+            // MailSendUtils.sendMail("1153518537@qq.com", code);
             // 将验证码存储到Session中
 
             // 将验证码缓存到redis中，并且设置有效期为5分钟
